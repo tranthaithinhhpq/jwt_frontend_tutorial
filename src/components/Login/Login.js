@@ -1,5 +1,12 @@
 import './Login.scss'
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { useHistory } from 'react-router-dom';
+
 const Login = (props) => {
+    let history = useHistory();
+    const handleCreateNewAccount = () => {
+        history.push("/register");
+    }
     return (
         <div className="login-container d-flex align-items-center">
             <div className="container ">
@@ -17,18 +24,14 @@ const Login = (props) => {
                         <div className='brand text-center'>
                             ĐĂNG NHẬP
                         </div>
-                        <div className='d-flex flex-column gap-2'>
-                            <div>Tên đăng nhập:</div>
-                            <div><input type="text" className="form-control" placeholder="enter email address " /></div>
-
+                        <div className='form-group'>
+                            <label>Email address:</label>
+                            <input type="text" className="form-control" placeholder="enter email address " />
                         </div>
-
-                        <div className="d-flex flex-column gap-2">
-                            <div>Mật khẩu:</div>
+                        <div className='form-group'>
+                            <label>Password:</label>
                             <input type="password" className="form-control" placeholder="Password" />
-
                         </div>
-
 
 
                         <button className='btn btn-primary'>Login</button>
@@ -38,7 +41,9 @@ const Login = (props) => {
                         <hr />
 
                         <div className='text-center'>
-                            <button className='btn btn-success'>Create new account</button>
+                            <button className='btn btn-success' onClick={() => handleCreateNewAccount()}>
+                                Create new account
+                            </button>
                         </div>
 
                     </div>

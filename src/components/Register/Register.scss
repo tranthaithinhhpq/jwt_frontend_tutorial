@@ -1,0 +1,35 @@
+.red {
+    border: solid red;
+}
+
+.green {
+    border: solid green;
+}
+
+.register-container {
+    background-color: #f0f2f5;
+    min-height: 100vh;
+    padding-top: 20px;
+
+    .content-right {
+        // border: 1px solid red;
+        border-radius: 8px;
+        background-color: white;
+        box-shadow: 0 2px 4px rgb(0 0 0/ 10%), 0 8px 16px rgb(0 0 0/ 10%);
+        box-sizing: border-box;
+    }
+
+    .content-left {
+        margin-top: 50px;
+        font-size: 30px;
+        color: #1877f2;
+    }
+
+    .forgot-password {
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
