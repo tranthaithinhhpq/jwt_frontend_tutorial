@@ -13,18 +13,49 @@ const Register = (props) => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setErrors] = useState({});
+    const [validation, setValidation] = useState({
+        defaultValidEmail: null,
+        defaultValidPhone: null,
+        defaultValidPassword: null,
+        defaultValidConfirmPassword: null
+    });
     let history = useHistory();
     const handleLogin = () => {
         history.push("/login");
     }
+    // validation.defaultValidEmail == false &&
+
+
+
+
+
+
 
     const isValidInputs = () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const error = {
-            email: !email ? 'Email không được để trống' : !emailRegex.test(email) ? 'Email không hợp lệ' : '',
-            phone: phone ? '' : 'Phone không được để trống',
-            password: password ? '' : 'Mật khẩu không được để trống',
-            confirmPassword: confirmPassword !== password ? 'Mật khẩu xác nhận không khớp' : confirmPassword ? '' : 'Vui lòng nhập lại mật khẩu',
+            //check email rỗng
+            email: !email ? (validation.defaultValidEmail = false, 'Input 1 không được để trống')
+                //check định dạng email 
+                : !emailRegex.test(email) ? (validation.defaultValidEmail = false, 'Email không hợp lệ')
+                    // không lỗi
+                    : (validation.defaultValidEmail = true, ''),
+
+            phone: !phone
+                ? (validation.defaultValidPhone = false, 'Phone không được để trống')
+                : (validation.defaultValidPhone = true, ''),
+
+            password: !password
+                ? (validation.defaultValidPassword = false, 'Mật khẩu không được để trống')
+                : (validation.defaultValidPassword = true, ''),
+
+            confirmPassword: confirmPassword !== password
+                ? (validation.defaultValidConfirmPassword = false, 'Mật khẩu xác nhận không khớp')
+                : confirmPassword ? (validation.defaultValidConfirmPassword = true, '')
+                    : (validation.defaultValidConfirmPassword = false, 'Vui lòng nhập lại mật khẩu')
+
+
+
         };
 
         setErrors(error);
@@ -65,9 +96,10 @@ const Register = (props) => {
                         <div className='brand text-center'>
                             ĐĂNG KÝ
                         </div>
+
                         <div className='form-group'>
                             <label>Email:</label>
-                            <input type="text" className="form-control" placeholder="enter email address "
+                            <input type="text" className={validation.defaultValidEmail === null ? "form-control" : validation.defaultValidEmail === true ? "form-control is-valid" : validation.defaultValidEmail === false ? "form-control is-invalid" : null} placeholder="enter email address "
                                 value={email} onChange={(event) => setEmail(event.target.value)}
                             />
                             {error.email && <label style={{ color: "red" }}>{error.email}</label>}
@@ -75,7 +107,7 @@ const Register = (props) => {
                         </div>
                         <div className='form-group'>
                             <label>Phone number:</label>
-                            <input type="text" className="form-control" placeholder="enter phone number "
+                            <input type="text" className={validation.defaultValidPhone === null ? "form-control" : validation.defaultValidPhone === true ? "form-control is-valid" : validation.defaultValidPhone === false ? "form-control is-invalid" : null} placeholder="enter phone number "
                                 value={phone} onChange={(event) => setPhone(event.target.value)}
                             />
                             {error.phone && <label style={{ color: "red" }}>{error.phone}</label>}
@@ -88,18 +120,27 @@ const Register = (props) => {
                         </div>
                         <div className='form-group'>
                             <label>Password:</label>
-                            <input type="password" className="form-control" placeholder="enter password"
+                            <input type="password" className={validation.defaultValidPassword === null ? "form-control" : validation.defaultValidPassword === true ? "form-control is-valid" : validation.defaultValidPassword === false ? "form-control is-invalid" : null} placeholder="enter password"
                                 value={password} onChange={(event) => setPassword(event.target.value)}
                             />
                             {error.password && <p style={{ color: "red" }}>{error.password}</p>}
                         </div>
+
+
+
                         <div className='form-group'>
                             <label>Re-enter password:</label>
-                            <input type="password" className="form-control" placeholder="re-enter password"
+                            <input type="password" className={validation.defaultValidConfirmPassword === null ? "form-control" : validation.defaultValidConfirmPassword === true ? "form-control is-valid" : validation.defaultValidConfirmPassword === false ? "form-control is-invalid" : null} placeholder="re-enter password"
                                 value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)}
                             />
-                            {error.confirmPassword && <label style={{ color: "red" }}>{error.confirmPassword}</label>}
+                            {error.confirmPassword && <p style={{ color: "red" }}>{error.confirmPassword}</p>}
                         </div>
+
+
+
+
+
+
                         <button className='btn btn-primary' onClick={() => handleRegister()}>Register</button>
                         <hr />
                         <div className='text-center'>
