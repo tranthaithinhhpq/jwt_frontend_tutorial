@@ -3,6 +3,8 @@ import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const Register = (props) => {
 
     const [email, setEmail] = useState("");
@@ -10,13 +12,29 @@ const Register = (props) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-
+    const [error, setErrors] = useState({});
     let history = useHistory();
     const handleLogin = () => {
         history.push("/login");
     }
 
+    const isValidInputs = () => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const error = {
+            email: !email ? 'Email không được để trống' : !emailRegex.test(email) ? 'Email không hợp lệ' : '',
+            phone: phone ? '' : 'Phone không được để trống',
+            password: password ? '' : 'Mật khẩu không được để trống',
+            confirmPassword: confirmPassword !== password ? 'Mật khẩu xác nhận không khớp' : confirmPassword ? '' : 'Vui lòng nhập lại mật khẩu',
+        };
+
+        setErrors(error);
+
+        // Kiểm tra nếu không có lỗi nào (tức là tất cả giá trị trong error đều rỗng)
+        return Object.values(error).every(msg => msg === '');
+    };
+
     const handleRegister = () => {
+        let check = isValidInputs();
         let userData = { email, phone, username, password, confirmPassword };
         console.log("check user data ", userData);
     }
@@ -52,12 +70,15 @@ const Register = (props) => {
                             <input type="text" className="form-control" placeholder="enter email address "
                                 value={email} onChange={(event) => setEmail(event.target.value)}
                             />
+                            {error.email && <label style={{ color: "red" }}>{error.email}</label>}
+
                         </div>
                         <div className='form-group'>
                             <label>Phone number:</label>
                             <input type="text" className="form-control" placeholder="enter phone number "
                                 value={phone} onChange={(event) => setPhone(event.target.value)}
                             />
+                            {error.phone && <label style={{ color: "red" }}>{error.phone}</label>}
                         </div>
                         <div className='form-group'>
                             <label>Username:</label>
@@ -70,12 +91,14 @@ const Register = (props) => {
                             <input type="password" className="form-control" placeholder="enter password"
                                 value={password} onChange={(event) => setPassword(event.target.value)}
                             />
+                            {error.password && <p style={{ color: "red" }}>{error.password}</p>}
                         </div>
                         <div className='form-group'>
                             <label>Re-enter password:</label>
                             <input type="password" className="form-control" placeholder="re-enter password"
                                 value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)}
                             />
+                            {error.confirmPassword && <label style={{ color: "red" }}>{error.confirmPassword}</label>}
                         </div>
                         <button className='btn btn-primary' onClick={() => handleRegister()}>Register</button>
                         <hr />
