@@ -23,22 +23,13 @@ const Register = (props) => {
     const handleLogin = () => {
         history.push("/login");
     }
-    // validation.defaultValidEmail == false &&
-
-
-
-
-
 
 
     const isValidInputs = () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const error = {
-            //check email rỗng
             email: !email ? (validation.defaultValidEmail = false, 'Email không được để trống')
-                //check định dạng email 
                 : !emailRegex.test(email) ? (validation.defaultValidEmail = false, 'Email không hợp lệ')
-                    // không lỗi
                     : (validation.defaultValidEmail = true, ''),
 
             phone: !phone
@@ -53,27 +44,29 @@ const Register = (props) => {
                 ? (validation.defaultValidConfirmPassword = false, 'Mật khẩu xác nhận không khớp')
                 : confirmPassword ? (validation.defaultValidConfirmPassword = true, '')
                     : (validation.defaultValidConfirmPassword = false, 'Vui lòng nhập lại mật khẩu')
-
-
-
         };
 
         setErrors(error);
-
-        // Kiểm tra nếu không có lỗi nào (tức là tất cả giá trị trong error đều rỗng)
         return Object.values(error).every(msg => msg === '');
     };
 
     const handleRegister = () => {
         let check = isValidInputs();
-        let userData = { email, phone, username, password, confirmPassword };
-        console.log("check user data ", userData);
+        if (check === true) {
+            axios.post("http://localhost:8080/api/v1/register", {
+                email, phone, username, password
+            })
+
+        }
+        //let userData = { email, phone, username, password, confirmPassword };
+        // console.log("check user data ", check);
     }
 
     useEffect(() => {
-        // axios.get("http://localhost:8080/api/test-api").then(data => {
+        // axios.get("http://localhost:8080/api/v1/test-api").then(data => {
         //     console.log("check data axios: ", data)
-        // }).catch((err) => console.log(err));
+        // })
+
 
     }, []);
 
