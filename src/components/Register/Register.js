@@ -35,7 +35,7 @@ const Register = (props) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const error = {
             //check email rỗng
-            email: !email ? (validation.defaultValidEmail = false, 'Input 1 không được để trống')
+            email: !email ? (validation.defaultValidEmail = false, 'Email không được để trống')
                 //check định dạng email 
                 : !emailRegex.test(email) ? (validation.defaultValidEmail = false, 'Email không hợp lệ')
                     // không lỗi
@@ -99,7 +99,7 @@ const Register = (props) => {
 
                         <div className='form-group'>
                             <label>Email:</label>
-                            <input type="text" className={validation.defaultValidEmail === null ? "form-control" : validation.defaultValidEmail === true ? "form-control is-valid" : validation.defaultValidEmail === false ? "form-control is-invalid" : null} placeholder="enter email address "
+                            <input type="text" className={validation.defaultValidEmail === null ? "form-control" : validation.defaultValidEmail ? "form-control is-valid" : "form-control is-invalid"} placeholder="enter email address "
                                 value={email} onChange={(event) => setEmail(event.target.value)}
                             />
                             {error.email && <label style={{ color: "red" }}>{error.email}</label>}
@@ -107,7 +107,7 @@ const Register = (props) => {
                         </div>
                         <div className='form-group'>
                             <label>Phone number:</label>
-                            <input type="text" className={validation.defaultValidPhone === null ? "form-control" : validation.defaultValidPhone === true ? "form-control is-valid" : validation.defaultValidPhone === false ? "form-control is-invalid" : null} placeholder="enter phone number "
+                            <input type="text" className={validation.defaultValidPhone === null ? "form-control" : validation.defaultValidPhone ? "form-control is-valid" : "form-control is-invalid"} placeholder="enter phone number "
                                 value={phone} onChange={(event) => setPhone(event.target.value)}
                             />
                             {error.phone && <label style={{ color: "red" }}>{error.phone}</label>}
@@ -120,7 +120,7 @@ const Register = (props) => {
                         </div>
                         <div className='form-group'>
                             <label>Password:</label>
-                            <input type="password" className={validation.defaultValidPassword === null ? "form-control" : validation.defaultValidPassword === true ? "form-control is-valid" : validation.defaultValidPassword === false ? "form-control is-invalid" : null} placeholder="enter password"
+                            <input type="password" className={validation.defaultValidPassword === null ? "form-control" : validation.defaultValidPassword ? "form-control is-valid" : "form-control is-invalid"} placeholder="enter password"
                                 value={password} onChange={(event) => setPassword(event.target.value)}
                             />
                             {error.password && <p style={{ color: "red" }}>{error.password}</p>}
@@ -130,7 +130,7 @@ const Register = (props) => {
 
                         <div className='form-group'>
                             <label>Re-enter password:</label>
-                            <input type="password" className={validation.defaultValidConfirmPassword === null ? "form-control" : validation.defaultValidConfirmPassword === true ? "form-control is-valid" : validation.defaultValidConfirmPassword === false ? "form-control is-invalid" : null} placeholder="re-enter password"
+                            <input type="password" className={validation.defaultValidConfirmPassword === null ? "form-control" : validation.defaultValidConfirmPassword ? "form-control is-valid" : "form-control is-invalid"} placeholder="re-enter password"
                                 value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)}
                             />
                             {error.confirmPassword && <p style={{ color: "red" }}>{error.confirmPassword}</p>}
