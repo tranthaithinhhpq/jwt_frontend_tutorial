@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
+import { registerNewUser } from '../../services/userService'
 import 'react-toastify/dist/ReactToastify.css';
 const Register = (props) => {
 
@@ -27,40 +28,80 @@ const Register = (props) => {
 
     const isValidInputs = () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const error = {
-            email: !email ? (validation.defaultValidEmail = false, 'Email không được để trống')
-                : !emailRegex.test(email) ? (validation.defaultValidEmail = false, 'Email không hợp lệ')
-                    : (validation.defaultValidEmail = true, ''),
+        const error = {};
 
-            phone: !phone
-                ? (validation.defaultValidPhone = false, 'Phone không được để trống')
-                : (validation.defaultValidPhone = true, ''),
+        // Email validation
+        if (!email) {
+            validation.defaultValidEmail = false;
+            error.email = 'Email không được để trống';
+        } else if (!emailRegex.test(email)) {
+            validation.defaultValidEmail = false;
+            error.email = 'Email không hợp lệ';
+        } else {
+            validation.defaultValidEmail = true;
+            error.email = '';
+        }
 
-            password: !password
-                ? (validation.defaultValidPassword = false, 'Mật khẩu không được để trống')
-                : (validation.defaultValidPassword = true, ''),
+        // Phone validation
+        if (!phone) {
+            validation.defaultValidPhone = false;
+            error.phone = 'Phone không được để trống';
+        } else {
+            validation.defaultValidPhone = true;
+            error.phone = '';
+        }
 
-            confirmPassword: confirmPassword !== password
-                ? (validation.defaultValidConfirmPassword = false, 'Mật khẩu xác nhận không khớp')
-                : confirmPassword ? (validation.defaultValidConfirmPassword = true, '')
-                    : (validation.defaultValidConfirmPassword = false, 'Vui lòng nhập lại mật khẩu')
-        };
+        // Password validation
+        if (!password) {
+            validation.defaultValidPassword = false;
+            error.password = 'Mật khẩu không được để trống';
+        } else {
+            validation.defaultValidPassword = true;
+            error.password = '';
+        }
+
+        // Confirm password validation
+        if (!confirmPassword) {
+            validation.defaultValidConfirmPassword = false;
+            error.confirmPassword = 'Vui lòng nhập lại mật khẩu';
+        } else if (confirmPassword !== password) {
+            validation.defaultValidConfirmPassword = false;
+            error.confirmPassword = 'Mật khẩu xác nhận không khớp';
+        } else {
+            validation.defaultValidConfirmPassword = true;
+            error.confirmPassword = '';
+        }
 
         setErrors(error);
         return Object.values(error).every(msg => msg === '');
     };
 
-    const handleRegister = () => {
+    const handleRegister = async () => {
         let check = isValidInputs();
-        if (check === true) {
-            axios.post("http://localhost:8080/api/v1/register", {
-                email, phone, username, password
-            })
 
+        if (check === true) {
+            let response = await registerNewUser(email, phone, username, password);
+            let serverData = response.data;
+            if (+serverData.EC === 0) {
+                toast.success(serverData.EM)
+                history.push("/login");
+            } else {
+                toast.error(serverData.EM);
+            }
         }
-        //let userData = { email, phone, username, password, confirmPassword };
-        // console.log("check user data ", check);
+
     }
+
+
+
+
+
+
+
+
+
+
+
 
     useEffect(() => {
         // axios.get("http://localhost:8080/api/v1/test-api").then(data => {
