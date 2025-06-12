@@ -96,13 +96,6 @@ const Register = (props) => {
 
 
 
-
-
-
-
-
-
-
     useEffect(() => {
         // axios.get("http://localhost:8080/api/v1/test-api").then(data => {
         //     console.log("check data axios: ", data)
