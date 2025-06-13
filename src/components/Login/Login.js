@@ -38,6 +38,7 @@ const Login = (props) => {
             }
             sessionStorage.setItem('account', JSON.stringify(data));
             history.push('/users');
+            window.location.reload();
             //redux
         }
         if (response && response.data && +response.data.EC !== 0) {
@@ -45,6 +46,13 @@ const Login = (props) => {
             toast.error(response.data.EM)
 
         }
+    }
+    const handleEnter = (event) => {
+        if (event.charCode === 0 && event.code === "Enter") {
+            handleLogin();
+
+        }
+
     }
     return (
         <div className="login-container d-flex align-items-center">
@@ -76,7 +84,9 @@ const Login = (props) => {
                             <input type="password" className={objValidInput.isValidPassword ? 'form-control' : 'is-invalid form-control'}
                                 placeholder="enter password"
                                 value={password}
-                                onChange={(event) => { setPassword(event.target.value) }} />
+                                onChange={(event) => { setPassword(event.target.value) }}
+                                onKeyDown={(event) => handleEnter(event)}
+                            />
                         </div>
 
 
