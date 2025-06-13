@@ -1,11 +1,12 @@
 import './Login.scss'
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import { useHistory } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { loginUser } from '../../services/userService'
 
 const Login = (props) => {
+
     let history = useHistory();
     const [valueLogin, setValueLogin] = useState("");
     const [password, setPassword] = useState("");
@@ -54,6 +55,14 @@ const Login = (props) => {
         }
 
     }
+    useEffect(() => {
+        let session = sessionStorage.getItem('account');
+        if (session) {
+            history.push("/");
+            window.location.reload();
+        }
+
+    }, [])
     return (
         <div className="login-container d-flex align-items-center">
             <div className="container ">

@@ -1,12 +1,13 @@
 import './App.scss';
 import Nav from './components/Navigation/Nav';
-import Login from './components/Login/Login';
-import Register from './components/Register/Register';
-import 'react-toastify/dist/ReactToastify.css'
-import User from './components/ManageUsers/Users';
-import { useEffect, userEffect, useState } from 'react';
-import _ from "lodash";
+// import Login from './components/Login/Login';
+// import Register from './components/Register/Register';
+// import User from './components/ManageUsers/Users';
+// import _ from "lodash";
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useEffect, useState } from 'react';
+import AppRoutes from './routes/AppRoutes';
 
 import {
   BrowserRouter as Router,
@@ -25,39 +26,15 @@ function App() {
 
   }, []);
   return (
-    <Router>
-      <div className='app-container'>
-        {account && !_.isEmpty(account) && account.isAuthenticated
-          && <Nav />
-        }
-
-        <Switch>
-          <Route path="/about">
-            about
-          </Route>
-          <Route path="/news">
-            news
-          </Route>
-          <Route path="/contact">
-            contact
-          </Route>
-          <Route path="/login">
-            <Login />
-          </Route>
-          <Route path="/register">
-            <Register />
-          </Route>
-          <Route path="/users">
-            <User />
-          </Route>
-          <Route path="/" exact>
-            home
-          </Route>
-          <Route path="*">
-            404 not found
-          </Route>
-        </Switch>
-      </div>
+    <>
+      <Router>
+        <div className='app-header'>
+          <Nav />
+        </div>
+        <div className='app-container'>
+          <AppRoutes />
+        </div>
+      </Router>
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -71,7 +48,7 @@ function App() {
         theme="light"
 
       />
-    </Router>
+    </>
   );
 }
 
