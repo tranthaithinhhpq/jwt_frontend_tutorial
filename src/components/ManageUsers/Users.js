@@ -4,6 +4,7 @@ import { fetchAllUser, deleteUser } from "../../services/userService"
 import ReactPaginate from "react-paginate";
 import { toast } from "react-toastify";
 import ModalDelete from "./ModalDetele";
+import ModalUser from "./ModalUser";
 const Users = (props) => {
     const [listUsers, setListUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -129,6 +130,9 @@ const Users = (props) => {
                 handleClose={handleClose}
                 confirmDeleteUser={confirmDeleteUser}
                 dataModal={dataModal}
+            />
+            <ModalUser
+                title={"Create new user"}
             />
         </>
 
