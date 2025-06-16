@@ -8,7 +8,7 @@ import ModalUser from "./ModalUser";
 const Users = (props) => {
     const [listUsers, setListUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [currentLimit, setCurrentLimit] = useState(3);
+    const [currentLimit, setCurrentLimit] = useState(10);
     const [totalPage, setTotalPage] = useState(0);
 
 
@@ -70,63 +70,87 @@ const Users = (props) => {
 
     }
 
+    const handleRefresh = async () => {
+        await fetchUsers();
+    }
+
     return (
         <>
             <div className="container">
-                <div className="user-header">
-                    <div className="title">
-                        <h3>Table Users</h3>
+                <div className="manage-users-container">
+                    <div className="user-header">
+                        <div className="title mt-3">
+                            <h3>Manage Users</h3>
+                        </div>
+                        <div className="actions my-3">
+                            <button className="btn btn-success refresh me-2"
+                                onClick={() => handleRefresh()}
+                            >
+                                <i className="fa fa-refresh"></i>Refresh
+                            </button>
+                            <button className="btn btn-primary"
+                                onClick={() => {
+                                    setIsShowModalUser(true);
+                                    setActionModalUser("CREATE");
+                                }}
+                            >
+                                <i className="fa fa-plus-circle"></i>
+                                Add new user
+                            </button>
+                        </div>
                     </div>
-                    <div className="actions">
-                        <button className="btn btn-success">Refresh</button>
-                        <button className="btn btn-primary"
-                            onClick={() => {
-                                setIsShowModalUser(true);
-                                setActionModalUser("CREATE");
-                            }}>Add new user</button>
-                    </div>
-                </div>
-                <div className="user-body">
-                    <table className="table table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col">No</th>
-                                <th scope="col">Id</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Username</th>
-                                <th scope="col">Group</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {listUsers && listUsers.length > 0 ?
-                                <>
-                                    {listUsers.map((item, index) => {
-                                        return (
-                                            <tr key={`row-${index}`}>
-                                                <td>{(currentPage - 1) * currentLimit + index + 1}</td>
-                                                <td>{item.id}</td>
-                                                <td>{item.email}</td>
-                                                <td>{item.username}</td>
-                                                <td>{item.Group ? item.Group.name : ""}</td>
-                                                <td>
-                                                    <button className="btn btn-warning me-2"
+
+                    <div className="user-body">
+                        <table className="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">No</th>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Username</th>
+                                    <th scope="col">Group</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {listUsers && listUsers.length > 0 ?
+                                    <>
+                                        {listUsers.map((item, index) => {
+                                            return (
+                                                <tr key={`row-${index}`}>
+                                                    <td>{(currentPage - 1) * currentLimit + index + 1}</td>
+                                                    <td>{item.id}</td>
+                                                    <td>{item.email}</td>
+                                                    <td>{item.username}</td>
+                                                    <td>{item.Group ? item.Group.name : ""}</td>
+                                                    <td>
+                                                        {/* <span
+                                                        title="Edit"
+                                                        className="edit"
                                                         onClick={() => handleEditUser(item)}
-                                                    >Edit</button>
-                                                    <button className="btn btn-danger"
+                                                    >
+                                                        <i className="fa fa-pencil"></i>
+                                                    </span>
+                                                    <span
+                                                        title="Delete"
+                                                        className="delete"
                                                         onClick={() => handleDeleteUser(item)}
-                                                    >Delete</button>
-                                                </td>
-                                            </tr>
-                                        )
-                                    })}
-                                </>
-                                :
-                                <>
-                                    <tr><td>Not found users </td></tr>
-                                </>}
-                        </tbody>
-                    </table>
+                                                    ><i className="fa fa-trash-o"></i></span> */}
+
+                                                        <i className="fa fa-pencil edit" onClick={() => handleEditUser(item)}></i>
+                                                        <i className="fa fa-trash-o delete" onClick={() => handleDeleteUser(item)}></i>
+                                                    </td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </>
+                                    :
+                                    <>
+                                        <tr><td>Not found users </td></tr>
+                                    </>}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div className="user-footer">
                     <ReactPaginate

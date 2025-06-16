@@ -1,7 +1,7 @@
 import { Modal } from "react-bootstrap";
 import { Button } from 'react-bootstrap';
 import { useState, useEffect } from "react";
-import { fetchGroup, createNewUser } from '../../services/userService'
+import { fetchGroup, createNewUser, updateCurrentUser } from '../../services/userService'
 import { toast } from "react-toastify";
 import _ from "lodash";
 
@@ -38,7 +38,6 @@ const ModalUser = (props) => {
     const [userGroup, setUserGroup] = useState([]);
 
     useEffect(() => {
-        console.log("run effect get gr")
         getGroups();
     }, [])
 
@@ -76,6 +75,8 @@ const ModalUser = (props) => {
     }
 
     const checkValidateInputs = () => {
+        //create user
+        if (action === 'UPDATE') return true;
         setValidInput(validInputDefault);
         console.log(">>> check user Data: ", userData);
         let arr = ['email', 'phone', 'password', 'group'];
@@ -98,14 +99,19 @@ const ModalUser = (props) => {
     const handleConfirmUser = async () => {
         let check = checkValidateInputs();
         if (check === true) {
-            let res = await createNewUser({ ...userData, groupId: userData['group'] });
+            let res = action === 'CREATE' ?
+                await createNewUser({ ...userData, groupId: userData['group'] })
+                : await updateCurrentUser({ ...userData, groupId: userData['group'] });
 
             if (res.data && res.data.EC === 0) {
                 props.onHide();
-                //await props.fetchUsers();
-                setUserData({ ...defaultUserData, group: userGroup[0].id })
+                setUserData({
+                    ...defaultUserData,
+                    group: userGroup && userGroup.length > 0 ? userGroup[0].id : ''
+                })
                 toast.success(res.data.EM);
-            } if (res.data && res.data.EC !== 0) {
+            }
+            if (res.data && res.data.EC !== 0) {
                 toast.error(res.data.EM);
                 let _validInputs = _.cloneDeep(validInputDefault);
                 _validInputs[res.data.DT] = false;
