@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import './Users.scss';
 import { fetchAllUser, deleteUser } from "../../services/userService"
 import ReactPaginate from "react-paginate";
 import { toast } from "react-toastify";
-import ModalDelete from "./ModalDetele";
+import ModalDelete from "./ModalDelete";
 import ModalUser from "./ModalUser";
 const Users = (props) => {
     const [listUsers, setListUsers] = useState([]);
@@ -22,17 +22,24 @@ const Users = (props) => {
     const [dataModalUser, setDataModalUser] = useState({});
 
 
-    useEffect(async () => {
-        fetchUsers();
-    }, [currentPage])
-    const fetchUsers = async () => {
-        let response = await fetchAllUser(currentPage, currentLimit);
-        if (response && response.data && response.data.EC === 0) {
-            setTotalPage(response.data.DT.totalPages);
-            setListUsers(response.data.DT.users);
-            //  console.log(response.data.DT);
+    const fetchUsers = useCallback(async () => {
+        try {
+            const response = await fetchAllUser(currentPage, currentLimit);
+            if (response && response.data && response.data.EC === 0) {
+                setTotalPage(response.data.DT.totalPages);
+                setListUsers(response.data.DT.users);
+            } else {
+                toast.error("Failed to fetch users.");
+            }
+        } catch (error) {
+            console.error("Error fetching users:", error);
+            toast.error("An error occurred while fetching users.");
         }
-    }
+    }, [currentPage, currentLimit]);
+
+    useEffect(() => {
+        fetchUsers();
+    }, [fetchUsers]);
 
     const handlePageClick = async (event) => {
         setCurrentPage(+event.selected + 1);
@@ -47,20 +54,30 @@ const Users = (props) => {
         setDataModal({});
     }
     const confirmDeleteUser = async () => {
-        let response = await deleteUser(dataModal);
-        if (response && response.data.EC === 0) {
-            toast.success(response.data.EM);
-            await fetchUsers();
-            setIsShowModalDelete(false);
-        } else {
-            toast.error(response.data.EM);
+        try {
+            let response = await deleteUser(dataModal);
+            if (response && response.data.EC === 0) {
+                toast.success(response.data.EM);
+                await fetchUsers();
+                setIsShowModalDelete(false);
+            } else {
+                toast.error(response.data.EM);
+            }
+        } catch (error) {
+            console.error("Error deleting user: ", error);
+            toast.error("An error occurred while deleting user.");
         }
     }
 
     const onHideModalUser = async () => {
-        setIsShowModalUser(false);
-        setDataModalUser({});
-        await fetchUsers();
+        try {
+            setIsShowModalUser(false);
+            setDataModalUser({});
+            await fetchUsers();
+        } catch (error) {
+            console.error("Error while closing modal and refreshing: ", error);
+            toast.error("An error occurred while updating users.");
+        }
     }
 
     const handleEditUser = (user) => {
@@ -71,8 +88,14 @@ const Users = (props) => {
     }
 
     const handleRefresh = async () => {
-        await fetchUsers();
+        try {
+            await fetchUsers();
+        } catch (error) {
+            console.error("Error refreshing users: ", error);
+            toast.error("An error occurred while refreshing users.");
+        }
     }
+
 
     return (
         <>
@@ -146,7 +169,7 @@ const Users = (props) => {
                                     </>
                                     :
                                     <>
-                                        <tr><td>Not found users </td></tr>
+                                        <tr><td colSpan="6" className="text-center">Not found users</td></tr>
                                     </>}
                             </tbody>
                         </table>
