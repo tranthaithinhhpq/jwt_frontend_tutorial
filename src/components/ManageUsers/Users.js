@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import './Users.scss';
 import { fetchAllUser, deleteUser } from "../../services/userService"
 import ReactPaginate from "react-paginate";
