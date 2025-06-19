@@ -44,7 +44,7 @@ const Login = (props) => {
                 account: { groupWithRoles, email, username }
             };
 
-            sessionStorage.setItem('account', JSON.stringify(data));
+
             loginContext(data);
             history.push('/users');
             //window.location.reload();
@@ -63,14 +63,7 @@ const Login = (props) => {
         }
 
     }
-    useEffect(() => {
-        let session = sessionStorage.getItem('account');
-        if (session) {
-            history.push("/");
-            window.location.reload();
-        }
 
-    }, [])
     return (
         <div className="login-container d-flex align-items-center">
             <div className="container ">
