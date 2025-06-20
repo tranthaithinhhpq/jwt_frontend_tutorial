@@ -1,26 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { getUserAccount } from '../services/userService';
-
+import { useLocation } from "react-router-dom";
 const UserContext = React.createContext(null);
 
 const UserProvider = ({ children }) => {
-    const [user, setUser] = useState({
+
+    // User is the name of the "data" that gets stored in context
+    const userDefault = {
+        isLoading: true,
         isAuthenticated: false,
         token: "",
         account: {}
-    });
+    };
+
+    const [user, setUser] = useState(userDefault);
+
 
     // Login cập nhật thông tin người dùng
     const loginContext = (userData) => {
-        setUser(userData);
+        setUser({ ...userData, isLoading: false });
     };
 
     // Logout reset dữ liệu người dùng
     const logout = () => {
         setUser({
-            isAuthenticated: false,
-            token: "",
-            account: {}
+            name: "",
+            auth: false,
         });
     };
 
@@ -36,15 +41,20 @@ const UserProvider = ({ children }) => {
             let data = {
                 isAuthenticated: true,
                 token,
-                account: { groupWithRoles, email, username }
+                account: { groupWithRoles, email, username },
+                isLoading: false
             };
 
             setUser(data);
+        } else {
+            setUser({ ...userDefault, isLoading: false })
         }
     };
 
     useEffect(() => {
-        fetchUser()
+        if (window.location.pathname !== '/' || window.location.pathname !== '/login') {
+            fetchUser()
+        }
     }, [])
 
     return (
