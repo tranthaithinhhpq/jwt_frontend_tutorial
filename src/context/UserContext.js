@@ -21,13 +21,12 @@ const UserProvider = ({ children }) => {
         setUser({ ...userData, isLoading: false });
     };
 
-    // Logout reset dữ liệu người dùng
-    const logout = () => {
-        setUser({
-            name: "",
-            auth: false,
-        });
-    };
+    // Logout updates the user data to default
+    const logoutContext = () => {
+        setUser({ ...userDefault, isLoading: false });
+    }
+
+
 
     const fetchUser = async () => {
         let response = await getUserAccount();
@@ -52,13 +51,15 @@ const UserProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        if (window.location.pathname !== '/' || window.location.pathname !== '/login') {
+        if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
             fetchUser()
+        } {
+            setUser({ ...user, isLoading: false })
         }
     }, [])
 
     return (
-        <UserContext.Provider value={{ user, loginContext, logout }}>
+        <UserContext.Provider value={{ user, loginContext, logoutContext }}>
             {children}
         </UserContext.Provider>
     );
