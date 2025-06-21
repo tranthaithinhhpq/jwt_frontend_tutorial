@@ -1,5 +1,5 @@
 import './App.scss';
-import Nav from './components/Navigation/Nav';
+import NavHeader from './components/Navigation/NavHeader';
 import { BrowserRouter as Router, } from "react-router-dom";
 // import Login from './components/Login/Login';
 // import Register from './components/Register/Register';
@@ -33,7 +33,7 @@ function App() {
           :
           <>
             <div className="app-header">
-              <Nav />
+              <NavHeader />
             </div>
             <div className="app-container">
               <AppRoutes />
