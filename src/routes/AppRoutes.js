@@ -6,6 +6,8 @@ import PrivateRoutes from "./PrivateRoutes";
 import Role from "../components/Role/Role";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
+import GroupRole from "../components/GroupRole/GroupRole";
+
 
 const AppRoutes = () => {
     const { user } = useContext(UserContext);
@@ -19,6 +21,7 @@ const AppRoutes = () => {
             <PrivateRoutes path="/users" component={Users} />
             <PrivateRoutes path="/projects" component={Project} />
             <PrivateRoutes path="/roles" component={Role} />
+            <PrivateRoutes path="/group-role" component={GroupRole} />
 
             <Route path="/login">
                 {console.log("check user: ", user)}
