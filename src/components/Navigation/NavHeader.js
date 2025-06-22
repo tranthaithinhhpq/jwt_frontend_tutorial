@@ -30,6 +30,9 @@ const NavHeader = (props) => {
     }
 
     if (user && user.isAuthenticated === true || location.pathname === '/') {
+        if (location.pathname === '/login') {
+            return <></>; // Ẩn Nav nếu đang ở trang login
+        }
         return (
             <>
                 <div className="nav-header">

@@ -50,13 +50,23 @@ const UserProvider = ({ children }) => {
         }
     };
 
+    // useEffect(() => {
+    //     if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
+    //         fetchUser()
+    //     } {
+    //         setUser({ ...user, isLoading: false })
+    //     }
+    // }, [])
     useEffect(() => {
-        if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
-            fetchUser()
-        } {
-            setUser({ ...user, isLoading: false })
+        const publicRoutes = ['/', '/login', '/register'];
+        if (!publicRoutes.includes(window.location.pathname)) {
+            fetchUser();
+        } else {
+            setUser(prev => ({ ...prev, isLoading: false }));
         }
-    }, [])
+    }, []);
+
+
 
     return (
         <UserContext.Provider value={{ user, loginContext, logoutContext }}>
