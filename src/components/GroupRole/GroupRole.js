@@ -1,7 +1,7 @@
 import './GroupRole.scss';
 import { useState, useEffect } from 'react';
 import { fetchGroup } from '../../services/userService';
-import { fetchAllRole, fetchRolesByGroup } from '../../services/roleService';
+import { fetchAllRole, fetchRolesByGroup, assignRolesToGroup } from '../../services/roleService';
 import _ from 'lodash';
 import { toast } from 'react-toastify';
 
@@ -15,6 +15,45 @@ const GroupRole = () => {
         getGroups();
         getAllRoles();
     }, []);
+
+
+
+    const buildDataToSave = () => {
+        // Example output: { groupId: 4, groupRoles: [{}, {}] }
+        let result = {};
+
+        const _assignRolesByGroup = _.cloneDeep(assignRolesByGroup);
+        result.groupId = selectGroup;
+
+        // Lọc những role được chọn (isAssigned === true)
+        let groupRolesFilter = _assignRolesByGroup.filter(item => item.isAssigned === true);
+
+        // Chuyển thành định dạng backend yêu cầu
+        let finalGroupRoles = groupRolesFilter.map(item => {
+            let data = {
+                groupId: +selectGroup,
+                roleId: +item.id,
+            };
+            return data;
+        });
+
+        result.groupRoles = finalGroupRoles;
+        return result;
+    };
+
+    const handleSave = async () => {
+        const data = buildDataToSave();
+        let res = await assignRolesToGroup(data);
+        if (res && res.EC === 0) {
+            toast.success(res.EM);
+        } else {
+            toast.error(res?.EM || "Something went wrong!");
+        }
+    };
+
+
+
+
 
 
     const getGroups = async () => {
@@ -131,7 +170,7 @@ const GroupRole = () => {
                                     })
                                 }
                                 <div className="mt-3">
-                                    <button className="btn btn-warning">Save</button>
+                                    <button className="btn btn-warning" onClick={() => handleSave()}>Save</button>
                                 </div>
                             </div>
                         }

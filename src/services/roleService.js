@@ -18,6 +18,11 @@ const fetchRolesByGroup = (groupId) => {
     return axios.get(`/api/v1/role/by-group/${groupId}`); // template string
 }
 
+const assignRolesToGroup = (data) => {
+    return axios.post('/api/v1/role/assign-to-group', { data });
+};
+
+
 
 // Export để dùng ở nơi khác
-export { createRoles, fetchAllRole, deleteRole, fetchRolesByGroup };
+export { createRoles, fetchAllRole, deleteRole, fetchRolesByGroup, assignRolesToGroup };
