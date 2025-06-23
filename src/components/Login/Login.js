@@ -1,12 +1,12 @@
 import './Login.scss'
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
-import { useHistory } from 'react-router-dom';
-import { useContext, useEffect, useState, userContext } from 'react';
+
+import { useHistory, Link } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { loginUser } from '../../services/userService'
 import { UserContext } from "../../context/UserContext"
 const Login = (props) => {
-    const { loginContext } = useContext(UserContext);
+    const { user, loginContext } = useContext(UserContext);
 
     let history = useHistory();
     const [valueLogin, setValueLogin] = useState("");
@@ -63,6 +63,11 @@ const Login = (props) => {
         }
 
     }
+    useEffect(() => {
+        if (user && user.isAuthenticated) {
+            history.push('/');
+        }
+    }, [user, history]);
 
     return (
         <div className="login-container d-flex align-items-center">
@@ -70,7 +75,10 @@ const Login = (props) => {
                 <div className="row px-3 px-md-0 ">
                     <div className="content-left col-12 d-none col-md-7 d-md-block">
                         <div className='brand'>
-                            ĐĂNG NHẬP
+                            <Link to="/">
+                                <span title="Return to HomePage">ĐĂNG NHẬP</span>
+                            </Link>
+
                         </div>
                         <div className='brand'>
                             Vui lòng đăng nhập để tiếp tục
@@ -110,6 +118,13 @@ const Login = (props) => {
                             <button className='btn btn-success' onClick={() => handleCreateNewAccount()}>
                                 Create new account
                             </button>
+                            <div className="mt-3 return">
+                                <Link to="/">
+                                    <i className="fa fa-arrow-circle-left"></i>
+                                    <span title="Return to HomePage">Return to HomePage</span>
+                                </Link>
+                            </div>
+
                         </div>
 
                     </div>

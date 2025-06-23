@@ -58,12 +58,12 @@ const UserProvider = ({ children }) => {
     //     }
     // }, [])
     useEffect(() => {
-        const publicRoutes = ['/', '/login', '/register'];
-        if (!publicRoutes.includes(window.location.pathname)) {
-            fetchUser();
-        } else {
-            setUser(prev => ({ ...prev, isLoading: false }));
-        }
+        // const publicRoutes = ['/', '/login', '/register'];
+        // if (!publicRoutes.includes(window.location.pathname)) {
+        fetchUser();
+        // } else {
+        //     setUser(prev => ({ ...prev, isLoading: false }));
+        // }
     }, []);
 
 

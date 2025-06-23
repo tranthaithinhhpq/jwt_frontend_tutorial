@@ -22,7 +22,7 @@ const fetchAllUser = (page, limit) => {
 // })
 
 const deleteUser = (user) => {
-    return axios.delete("/api/v1/user/remove", { data: { id: user.id } });
+    return axios.delete("/api/v1/user/delete", { data: { id: user.id } });
 
 }
 

@@ -1,12 +1,13 @@
 import './Register.scss'
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { registerNewUser } from '../../services/userService'
+import { UserContext } from "../../context/UserContext"
 import 'react-toastify/dist/ReactToastify.css';
 const Register = (props) => {
+    const { user } = useContext(UserContext);
 
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
@@ -92,18 +93,11 @@ const Register = (props) => {
 
     }
 
-
-
-
-
     useEffect(() => {
-        // axios.get("http://localhost:8080/api/v1/test-api").then(data => {
-        //     console.log("check data axios: ", data)
-        // })
-
-
+        if (user && user.isAuthenticated) {
+            history.push('/');
+        }
     }, []);
-
 
 
     return (
@@ -112,7 +106,9 @@ const Register = (props) => {
                 <div className="row px-3 px-md-0 ">
                     <div className="content-left col-12 d-none col-md-7 d-md-block">
                         <div className='brand'>
-                            ĐĂNG KÝ
+                            <Link to="/">
+                                <span title="Return to HomePage">ĐĂNG KÝ</span>
+                            </Link>
                         </div>
                         <div className='brand'>
                             Vui lòng đăng nhập để tiếp tục
@@ -162,18 +158,19 @@ const Register = (props) => {
                             />
                             {error.confirmPassword && <p style={{ color: "red" }}>{error.confirmPassword}</p>}
                         </div>
-
-
-
-
-
-
                         <button className='btn btn-primary' onClick={() => handleRegister()}>Register</button>
                         <hr />
                         <div className='text-center'>
                             <button className='btn btn-success' onClick={() => handleLogin()}>
                                 Already have account. Login ?
                             </button>
+                            <div className="mt-3 return">
+                                <Link to="/">
+                                    <i className="fa fa-arrow-circle-left" aria-hidden="true"></i>
+                                    <span title="Return to HomePage">Return to HomePage</span>
+                                </Link>
+                            </div>
+
                         </div>
 
                     </div>

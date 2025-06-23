@@ -5,10 +5,11 @@ import ReactPaginate from "react-paginate";
 import { toast } from "react-toastify";
 import ModalDelete from "./ModalDelete";
 import ModalUser from "./ModalUser";
+import Scrollbars from 'react-custom-scrollbars';
 const Users = (props) => {
     const [listUsers, setListUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [currentLimit, setCurrentLimit] = useState(10);
+    const [currentLimit, setCurrentLimit] = useState(2);
     const [totalPage, setTotalPage] = useState(0);
 
 
@@ -27,7 +28,19 @@ const Users = (props) => {
             const response = await fetchAllUser(currentPage, currentLimit);
             if (response && response && response.EC === 0) {
                 setTotalPage(response.DT.totalPages);
-                setListUsers(response.DT.users);
+                // Nếu vẫn còn trang nhưng trang hiện tại không có user nào
+                if (response.DT.totalPages > 0 && response.DT.users.length === 0) {
+                    // Di chuyển về trang cuối cùng
+                    setCurrentPage(+response.DT.totalPages);
+                    // Gọi lại API để lấy dữ liệu user ở trang cuối
+                    await fetchAllUser(+response.DT.totalPages, currentLimit);
+                }
+
+                // Nếu có dữ liệu user hợp lệ thì hiển thị
+                if (response.DT.totalPages > 0 && response.DT.users.length > 0) {
+                    setListUsers(response.DT.users);
+                }
+
             } else {
                 toast.error("Failed to fetch users.");
             }
@@ -124,30 +137,31 @@ const Users = (props) => {
                     </div>
 
                     <div className="user-body">
-                        <table className="table table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope="col">No</th>
-                                    <th scope="col">Id</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Username</th>
-                                    <th scope="col">Group</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {listUsers && listUsers.length > 0 ?
-                                    <>
-                                        {listUsers.map((item, index) => {
-                                            return (
-                                                <tr key={`row-${index}`}>
-                                                    <td>{(currentPage - 1) * currentLimit + index + 1}</td>
-                                                    <td>{item.id}</td>
-                                                    <td>{item.email}</td>
-                                                    <td>{item.username}</td>
-                                                    <td>{item.Group ? item.Group.name : ""}</td>
-                                                    <td>
-                                                        {/* <span
+                        <Scrollbars autoHeight autoHeightMax={400} autoHide>
+                            <table className="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">No</th>
+                                        <th scope="col">Id</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Username</th>
+                                        <th scope="col">Group</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {listUsers && listUsers.length > 0 ?
+                                        <>
+                                            {listUsers.map((item, index) => {
+                                                return (
+                                                    <tr key={`row-${index}`}>
+                                                        <td>{(currentPage - 1) * currentLimit + index + 1}</td>
+                                                        <td>{item.id}</td>
+                                                        <td>{item.email}</td>
+                                                        <td>{item.username}</td>
+                                                        <td>{item.Group ? item.Group.name : ""}</td>
+                                                        <td>
+                                                            {/* <span
                                                         title="Edit"
                                                         className="edit"
                                                         onClick={() => handleEditUser(item)}
@@ -160,20 +174,23 @@ const Users = (props) => {
                                                         onClick={() => handleDeleteUser(item)}
                                                     ><i className="fa fa-trash-o"></i></span> */}
 
-                                                        <i className="fa fa-pencil edit" onClick={() => handleEditUser(item)}></i>
-                                                        <i className="fa fa-trash-o delete" onClick={() => handleDeleteUser(item)}></i>
-                                                    </td>
-                                                </tr>
-                                            )
-                                        })}
-                                    </>
-                                    :
-                                    <>
-                                        <tr><td colSpan="6" className="text-center">Not found users</td></tr>
-                                    </>}
-                            </tbody>
-                        </table>
+                                                            <i className="fa fa-pencil edit" onClick={() => handleEditUser(item)}></i>
+                                                            <i className="fa fa-trash-o delete" onClick={() => handleDeleteUser(item)}></i>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            })}
+                                        </>
+                                        :
+                                        <>
+                                            <tr><td colSpan="6" className="text-center">Not found users</td></tr>
+                                        </>}
+                                </tbody>
+                            </table>
+                        </Scrollbars>
                     </div>
+
+
                 </div>
                 <div className="user-footer">
                     <ReactPaginate
@@ -195,6 +212,7 @@ const Users = (props) => {
                         containerClassName="pagination"
                         activeClassName="active"
                         renderOnZeroPageCount={null}
+                        forcePage={+currentPage - 1}
                     />
                 </div>
             </div>

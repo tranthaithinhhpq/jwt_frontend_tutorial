@@ -7,11 +7,21 @@ import Role from "../components/Role/Role";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import GroupRole from "../components/GroupRole/GroupRole";
+import Home from "../components/Home/Home";
+import About from "../components/About/About";
+
 
 
 const AppRoutes = () => {
     const { user } = useContext(UserContext);
-    const Project = () => <span>projects</span>;
+    const Project = () => {
+        return (
+            <div className="container mt-3">
+                <h4>Todo...</h4>
+            </div>
+        );
+    };
+
 
     // Đợi load user xong rồi mới render route
     if (user.isLoading) return null;
@@ -24,20 +34,22 @@ const AppRoutes = () => {
             <PrivateRoutes path="/group-role" component={GroupRole} />
 
             <Route path="/login">
-                {console.log("check user: ", user)}
-                {user.isAuthenticated ? <Redirect to="/" /> : <Login />}
+                <Login />
             </Route>
 
             <Route path="/register">
-                {user.isAuthenticated ? <Redirect to="/" /> : <Register />}
+                <Register />
+            </Route>
+            <Route path="/about">
+                <About />
             </Route>
 
             <Route path="/" exact>
-                home
+                <Home />
             </Route>
 
             <Route path="*">
-                404 not found
+                <div className="container">404 not found...</div>
             </Route>
         </Switch>
     );
